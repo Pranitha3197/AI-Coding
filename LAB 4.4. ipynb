@@ -1,0 +1,1457 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPwOKJf0d4YZ+Xtg5U/Rtxp",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Pranitha3197/AI-Coding/blob/main/LAB%204.4.%20ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "mB-Rez24pQML",
+        "outputId": "ec344d43-128a-4726-defb-6d57b9f2d960"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Sample Customer Reviews:\n",
+            "\n",
+            "Review: The product quality is excellent and delivery was fast.\n",
+            "Sentiment: Positive\n",
+            "\n",
+            "Review: Very disappointed, the item arrived broken.\n",
+            "Sentiment: Negative\n",
+            "\n",
+            "Review: The packaging was okay, nothing special.\n",
+            "Sentiment: Neutral\n",
+            "\n",
+            "Review: Amazing service and great value for money!\n",
+            "Sentiment: Positive\n",
+            "\n",
+            "Review: Customer support was slow and unhelpful.\n",
+            "Sentiment: Negative\n",
+            "\n",
+            "Review: The product works as described.\n",
+            "Sentiment: Neutral\n",
+            "\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Sample customer reviews with sentiment labels\n",
+        "reviews = [\n",
+        "    (\"The product quality is excellent and delivery was fast.\", \"Positive\"),\n",
+        "    (\"Very disappointed, the item arrived broken.\", \"Negative\"),\n",
+        "    (\"The packaging was okay, nothing special.\", \"Neutral\"),\n",
+        "    (\"Amazing service and great value for money!\", \"Positive\"),\n",
+        "    (\"Customer support was slow and unhelpful.\", \"Negative\"),\n",
+        "    (\"The product works as described.\", \"Neutral\")\n",
+        "]\n",
+        "\n",
+        "print(\"Sample Customer Reviews:\\n\")\n",
+        "for review, sentiment in reviews:\n",
+        "    print(f\"Review: {review}\")\n",
+        "    print(f\"Sentiment: {sentiment}\\n\")\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def show_prompt(prompt, output):\n",
+        "    print(\"PROMPT:\\n\")\n",
+        "    print(prompt)\n",
+        "    print(\"\\nMODEL OUTPUT:\\n\")\n",
+        "    print(output)\n",
+        "    print(\"-\" * 60)\n"
+      ],
+      "metadata": {
+        "id": "nTC5LfVSplDa"
+      },
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "zero_shot_prompt = \"\"\"\n",
+        "Classify the following customer review as:\n",
+        "Positive, Negative, or Neutral.\n",
+        "\n",
+        "Review: \"Very disappointed, the item arrived broken.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(zero_shot_prompt, \"Negative\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "vQVsfIhGpq5q",
+        "outputId": "2a3d33b3-687d-483e-fc59-3044cc82ef42"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Classify the following customer review as:\n",
+            "Positive, Negative, or Neutral.\n",
+            "\n",
+            "Review: \"Very disappointed, the item arrived broken.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Negative\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "one_shot_prompt = \"\"\"\n",
+        "Example:\n",
+        "Review: \"The product quality is excellent and delivery was fast.\"\n",
+        "Sentiment: Positive\n",
+        "\n",
+        "Now classify the following review:\n",
+        "Review: \"Customer support was slow and unhelpful.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(one_shot_prompt, \"Negative\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Q0ESLT5mpvFb",
+        "outputId": "316f4f1b-f8b6-4b96-8e85-0c88b8423514"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example:\n",
+            "Review: \"The product quality is excellent and delivery was fast.\"\n",
+            "Sentiment: Positive\n",
+            "\n",
+            "Now classify the following review:\n",
+            "Review: \"Customer support was slow and unhelpful.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Negative\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "few_shot_prompt = \"\"\"\n",
+        "Example 1:\n",
+        "Review: \"Amazing service and great value for money!\"\n",
+        "Sentiment: Positive\n",
+        "\n",
+        "Example 2:\n",
+        "Review: \"Very disappointed, the item arrived broken.\"\n",
+        "Sentiment: Negative\n",
+        "\n",
+        "Example 3:\n",
+        "Review: \"The packaging was okay, nothing special.\"\n",
+        "Sentiment: Neutral\n",
+        "\n",
+        "Now classify the following review:\n",
+        "Review: \"The product works as described.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(few_shot_prompt, \"Neutral\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "MnR90Y1vp1lr",
+        "outputId": "d8486ab8-47cd-4045-bfdd-0ffdfee59720"
+      },
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example 1:\n",
+            "Review: \"Amazing service and great value for money!\"\n",
+            "Sentiment: Positive\n",
+            "\n",
+            "Example 2:\n",
+            "Review: \"Very disappointed, the item arrived broken.\"\n",
+            "Sentiment: Negative\n",
+            "\n",
+            "Example 3:\n",
+            "Review: \"The packaging was okay, nothing special.\"\n",
+            "Sentiment: Neutral\n",
+            "\n",
+            "Now classify the following review:\n",
+            "Review: \"The product works as described.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Neutral\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "comparison = \"\"\"\n",
+        "Comparison of Prompting Techniques:\n",
+        "\n",
+        "Zero-shot:\n",
+        "- Works well for strong opinions\n",
+        "- Struggles with neutral or subtle reviews\n",
+        "\n",
+        "One-shot:\n",
+        "- Better understanding of sentiment boundaries\n",
+        "- More consistent than zero-shot\n",
+        "\n",
+        "Few-shot:\n",
+        "- Highest accuracy\n",
+        "- Handles neutral and mixed sentiments well\n",
+        "- Best choice for real-world applications\n",
+        "\"\"\"\n",
+        "\n",
+        "print(comparison)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "VMjemhorp4mP",
+        "outputId": "3eb0c88d-1bba-4873-f1f2-758d7315848d"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "Comparison of Prompting Techniques:\n",
+            "\n",
+            "Zero-shot:\n",
+            "- Works well for strong opinions\n",
+            "- Struggles with neutral or subtle reviews\n",
+            "\n",
+            "One-shot:\n",
+            "- Better understanding of sentiment boundaries\n",
+            "- More consistent than zero-shot\n",
+            "\n",
+            "Few-shot:\n",
+            "- Highest accuracy\n",
+            "- Handles neutral and mixed sentiments well\n",
+            "- Best choice for real-world applications\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#senario 2\n",
+        "# Sample emails with priority labels\n",
+        "emails = [\n",
+        "    (\"My account has been charged twice, please resolve immediately.\", \"High\"),\n",
+        "    (\"The application server is down and needs urgent attention.\", \"High\"),\n",
+        "    (\"Can you update me on the status of my request?\", \"Medium\"),\n",
+        "    (\"Please schedule the meeting for next week.\", \"Medium\"),\n",
+        "    (\"Thank you for the quick support!\", \"Low\"),\n",
+        "    (\"Just checking in to see if there are any updates.\", \"Low\")\n",
+        "]\n",
+        "\n",
+        "print(\"Sample Email Messages:\\n\")\n",
+        "for email, priority in emails:\n",
+        "    print(f\"Email: {email}\")\n",
+        "    print(f\"Priority: {priority}\\n\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "r_sR-_Isp_vz",
+        "outputId": "cae5fa93-22e8-4429-96cf-f2924db2e324"
+      },
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Sample Email Messages:\n",
+            "\n",
+            "Email: My account has been charged twice, please resolve immediately.\n",
+            "Priority: High\n",
+            "\n",
+            "Email: The application server is down and needs urgent attention.\n",
+            "Priority: High\n",
+            "\n",
+            "Email: Can you update me on the status of my request?\n",
+            "Priority: Medium\n",
+            "\n",
+            "Email: Please schedule the meeting for next week.\n",
+            "Priority: Medium\n",
+            "\n",
+            "Email: Thank you for the quick support!\n",
+            "Priority: Low\n",
+            "\n",
+            "Email: Just checking in to see if there are any updates.\n",
+            "Priority: Low\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def show_prompt(prompt, output):\n",
+        "    print(\"PROMPT:\\n\")\n",
+        "    print(prompt)\n",
+        "    print(\"\\nMODEL OUTPUT:\\n\")\n",
+        "    print(output)\n",
+        "    print(\"-\" * 60)\n"
+      ],
+      "metadata": {
+        "id": "MGB8Ar9rrLML"
+      },
+      "execution_count": 8,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "zero_shot_prompt = \"\"\"\n",
+        "Classify the following email into one of these priorities:\n",
+        "High Priority, Medium Priority, Low Priority.\n",
+        "\n",
+        "Email: \"The application server is down and needs urgent attention.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(zero_shot_prompt, \"High Priority\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "BCx8nCwVrPQw",
+        "outputId": "dcb22dec-9ea6-459d-e2a9-411174aa95bf"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Classify the following email into one of these priorities:\n",
+            "High Priority, Medium Priority, Low Priority.\n",
+            "\n",
+            "Email: \"The application server is down and needs urgent attention.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "High Priority\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "one_shot_prompt = \"\"\"\n",
+        "Example:\n",
+        "Email: \"My account has been charged twice, please resolve immediately.\"\n",
+        "Priority: High Priority\n",
+        "\n",
+        "Now classify the following email:\n",
+        "Email: \"Can you update me on the status of my request?\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(one_shot_prompt, \"Medium Priority\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "sxtlyHysrRgA",
+        "outputId": "1d0243e7-3d26-44e5-c69c-64309aac7974"
+      },
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example:\n",
+            "Email: \"My account has been charged twice, please resolve immediately.\"\n",
+            "Priority: High Priority\n",
+            "\n",
+            "Now classify the following email:\n",
+            "Email: \"Can you update me on the status of my request?\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Medium Priority\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "few_shot_prompt = \"\"\"\n",
+        "Example 1:\n",
+        "Email: \"The application server is down and needs urgent attention.\"\n",
+        "Priority: High Priority\n",
+        "\n",
+        "Example 2:\n",
+        "Email: \"Please schedule the meeting for next week.\"\n",
+        "Priority: Medium Priority\n",
+        "\n",
+        "Example 3:\n",
+        "Email: \"Thank you for the quick support!\"\n",
+        "Priority: Low Priority\n",
+        "\n",
+        "Now classify the following email:\n",
+        "Email: \"Just checking in to see if there are any updates.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(few_shot_prompt, \"Low Priority\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "l-z7sXGurTa9",
+        "outputId": "eb452792-18b6-4a0f-b266-7ef29ecfc4bf"
+      },
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example 1:\n",
+            "Email: \"The application server is down and needs urgent attention.\"\n",
+            "Priority: High Priority\n",
+            "\n",
+            "Example 2:\n",
+            "Email: \"Please schedule the meeting for next week.\"\n",
+            "Priority: Medium Priority\n",
+            "\n",
+            "Example 3:\n",
+            "Email: \"Thank you for the quick support!\"\n",
+            "Priority: Low Priority\n",
+            "\n",
+            "Now classify the following email:\n",
+            "Email: \"Just checking in to see if there are any updates.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Low Priority\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "evaluation = \"\"\"\n",
+        "Evaluation of Prompting Techniques:\n",
+        "\n",
+        "Zero-shot:\n",
+        "- Fast and simple\n",
+        "- Works for clearly urgent emails\n",
+        "- Less reliable for borderline cases\n",
+        "\n",
+        "One-shot:\n",
+        "- Provides better guidance\n",
+        "- Reduces ambiguity\n",
+        "\n",
+        "Few-shot:\n",
+        "- Highest accuracy\n",
+        "- Learns priority patterns effectively\n",
+        "- Best suited for production systems\n",
+        "\"\"\"\n",
+        "\n",
+        "print(evaluation)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "BS95c_q7rV44",
+        "outputId": "e67bd818-4248-41e1-e0e1-dd89cc773bc7"
+      },
+      "execution_count": 12,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "Evaluation of Prompting Techniques:\n",
+            "\n",
+            "Zero-shot:\n",
+            "- Fast and simple\n",
+            "- Works for clearly urgent emails\n",
+            "- Less reliable for borderline cases\n",
+            "\n",
+            "One-shot:\n",
+            "- Provides better guidance\n",
+            "- Reduces ambiguity\n",
+            "\n",
+            "Few-shot:\n",
+            "- Highest accuracy\n",
+            "- Learns priority patterns effectively\n",
+            "- Best suited for production systems\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#3 scenario\n",
+        "# Sample student queries with department labels\n",
+        "student_queries = [\n",
+        "    (\"What is the last date to apply for the MBA program?\", \"Admissions\"),\n",
+        "    (\"How can I download my hall ticket for the semester exam?\", \"Exams\"),\n",
+        "    (\"Can you explain the syllabus for Data Structures?\", \"Academics\"),\n",
+        "    (\"When will campus placement drives start?\", \"Placements\"),\n",
+        "    (\"Is there any entrance exam for B.Tech admissions?\", \"Admissions\"),\n",
+        "    (\"How do I apply for internships through college?\", \"Placements\")\n",
+        "]\n",
+        "\n",
+        "print(\"Sample Student Queries:\\n\")\n",
+        "for query, dept in student_queries:\n",
+        "    print(f\"Query: {query}\")\n",
+        "    print(f\"Department: {dept}\\n\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LEwC0m7CrZm4",
+        "outputId": "db0a8e2c-6e06-4632-ebae-a388dbaefac3"
+      },
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Sample Student Queries:\n",
+            "\n",
+            "Query: What is the last date to apply for the MBA program?\n",
+            "Department: Admissions\n",
+            "\n",
+            "Query: How can I download my hall ticket for the semester exam?\n",
+            "Department: Exams\n",
+            "\n",
+            "Query: Can you explain the syllabus for Data Structures?\n",
+            "Department: Academics\n",
+            "\n",
+            "Query: When will campus placement drives start?\n",
+            "Department: Placements\n",
+            "\n",
+            "Query: Is there any entrance exam for B.Tech admissions?\n",
+            "Department: Admissions\n",
+            "\n",
+            "Query: How do I apply for internships through college?\n",
+            "Department: Placements\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def show_prompt(prompt, output):\n",
+        "    print(\"PROMPT:\\n\")\n",
+        "    print(prompt)\n",
+        "    print(\"\\nMODEL OUTPUT:\\n\")\n",
+        "    print(output)\n",
+        "    print(\"-\" * 60)\n"
+      ],
+      "metadata": {
+        "id": "aV_F5a56rz0T"
+      },
+      "execution_count": 14,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "zero_shot_prompt = \"\"\"\n",
+        "Classify the following student query into one of these departments:\n",
+        "Admissions, Exams, Academics, Placements.\n",
+        "\n",
+        "Query: \"How can I download my hall ticket for the semester exam?\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(zero_shot_prompt, \"Exams\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "78GGEmMLr2Tk",
+        "outputId": "828a793a-d27c-44e9-97b9-4f1c9c42c12d"
+      },
+      "execution_count": 15,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Classify the following student query into one of these departments:\n",
+            "Admissions, Exams, Academics, Placements.\n",
+            "\n",
+            "Query: \"How can I download my hall ticket for the semester exam?\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Exams\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "one_shot_prompt = \"\"\"\n",
+        "Example:\n",
+        "Query: \"What is the last date to apply for the MBA program?\"\n",
+        "Department: Admissions\n",
+        "\n",
+        "Now classify the following query:\n",
+        "Query: \"When will campus placement drives start?\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(one_shot_prompt, \"Placements\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "2_hplmKar4aW",
+        "outputId": "7d793281-fae9-47b7-d745-185e7dc60f84"
+      },
+      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example:\n",
+            "Query: \"What is the last date to apply for the MBA program?\"\n",
+            "Department: Admissions\n",
+            "\n",
+            "Now classify the following query:\n",
+            "Query: \"When will campus placement drives start?\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Placements\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "few_shot_prompt = \"\"\"\n",
+        "Example 1:\n",
+        "Query: \"What is the last date to apply for the MBA program?\"\n",
+        "Department: Admissions\n",
+        "\n",
+        "Example 2:\n",
+        "Query: \"How can I download my hall ticket for the semester exam?\"\n",
+        "Department: Exams\n",
+        "\n",
+        "Example 3:\n",
+        "Query: \"Can you explain the syllabus for Data Structures?\"\n",
+        "Department: Academics\n",
+        "\n",
+        "Example 4:\n",
+        "Query: \"How do I apply for internships through college?\"\n",
+        "Department: Placements\n",
+        "\n",
+        "Now classify the following query:\n",
+        "Query: \"Is there any entrance exam for B.Tech admissions?\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(few_shot_prompt, \"Admissions\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "dRp_ybMkr6eM",
+        "outputId": "98c479e6-a331-4d0f-b67c-95f4026273ac"
+      },
+      "execution_count": 17,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example 1:\n",
+            "Query: \"What is the last date to apply for the MBA program?\"\n",
+            "Department: Admissions\n",
+            "\n",
+            "Example 2:\n",
+            "Query: \"How can I download my hall ticket for the semester exam?\"\n",
+            "Department: Exams\n",
+            "\n",
+            "Example 3:\n",
+            "Query: \"Can you explain the syllabus for Data Structures?\"\n",
+            "Department: Academics\n",
+            "\n",
+            "Example 4:\n",
+            "Query: \"How do I apply for internships through college?\"\n",
+            "Department: Placements\n",
+            "\n",
+            "Now classify the following query:\n",
+            "Query: \"Is there any entrance exam for B.Tech admissions?\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Admissions\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "analysis = \"\"\"\n",
+        "Analysis of Prompting Techniques:\n",
+        "\n",
+        "Zero-shot:\n",
+        "- Simple and fast\n",
+        "- May misclassify ambiguous queries\n",
+        "\n",
+        "One-shot:\n",
+        "- Better guidance with one example\n",
+        "- Reduces confusion between departments\n",
+        "\n",
+        "Few-shot:\n",
+        "- Highest accuracy\n",
+        "- Learns patterns from multiple examples\n",
+        "- Best suited for real chatbot deployment\n",
+        "\"\"\"\n",
+        "\n",
+        "print(analysis)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "UERywGcEr8wl",
+        "outputId": "ee500fb5-5923-4a22-fca8-1837173699ba"
+      },
+      "execution_count": 18,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "Analysis of Prompting Techniques:\n",
+            "\n",
+            "Zero-shot:\n",
+            "- Simple and fast\n",
+            "- May misclassify ambiguous queries\n",
+            "\n",
+            "One-shot:\n",
+            "- Better guidance with one example\n",
+            "- Reduces confusion between departments\n",
+            "\n",
+            "Few-shot:\n",
+            "- Highest accuracy\n",
+            "- Learns patterns from multiple examples\n",
+            "- Best suited for real chatbot deployment\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#4 scenario\n",
+        "# Sample chatbot queries with question type labels\n",
+        "queries = [\n",
+        "    (\"What are your working hours?\", \"Informational\"),\n",
+        "    (\"I want to cancel my order.\", \"Transactional\"),\n",
+        "    (\"My order arrived damaged.\", \"Complaint\"),\n",
+        "    (\"Great service, I really liked the experience!\", \"Feedback\"),\n",
+        "    (\"How can I reset my password?\", \"Informational\"),\n",
+        "    (\"Please update my delivery address.\", \"Transactional\")\n",
+        "]\n",
+        "\n",
+        "print(\"Sample Chatbot Queries:\\n\")\n",
+        "for q, qtype in queries:\n",
+        "    print(f\"Query: {q}\")\n",
+        "    print(f\"Type: {qtype}\\n\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "qB9aohWtsEVB",
+        "outputId": "7b3ac8c4-8e51-4171-dbbc-933fa7dcda35"
+      },
+      "execution_count": 19,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Sample Chatbot Queries:\n",
+            "\n",
+            "Query: What are your working hours?\n",
+            "Type: Informational\n",
+            "\n",
+            "Query: I want to cancel my order.\n",
+            "Type: Transactional\n",
+            "\n",
+            "Query: My order arrived damaged.\n",
+            "Type: Complaint\n",
+            "\n",
+            "Query: Great service, I really liked the experience!\n",
+            "Type: Feedback\n",
+            "\n",
+            "Query: How can I reset my password?\n",
+            "Type: Informational\n",
+            "\n",
+            "Query: Please update my delivery address.\n",
+            "Type: Transactional\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def show_prompt(prompt, output):\n",
+        "    print(\"PROMPT:\\n\")\n",
+        "    print(prompt)\n",
+        "    print(\"\\nMODEL OUTPUT:\\n\")\n",
+        "    print(output)\n",
+        "    print(\"-\" * 60)\n"
+      ],
+      "metadata": {
+        "id": "2Z8h8lQRs0O5"
+      },
+      "execution_count": 20,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "zero_shot_prompt = \"\"\"\n",
+        "Classify the following user query into one of these categories:\n",
+        "Informational, Transactional, Complaint, Feedback.\n",
+        "\n",
+        "Query: \"My order arrived damaged.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(zero_shot_prompt, \"Complaint\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "QeezPR7is5Zc",
+        "outputId": "1cafad6d-7271-46dc-e6c4-8139012f409a"
+      },
+      "execution_count": 21,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Classify the following user query into one of these categories:\n",
+            "Informational, Transactional, Complaint, Feedback.\n",
+            "\n",
+            "Query: \"My order arrived damaged.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Complaint\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "one_shot_prompt = \"\"\"\n",
+        "Example:\n",
+        "Query: \"Great service, I really liked the experience!\"\n",
+        "Category: Feedback\n",
+        "\n",
+        "Now classify the following query:\n",
+        "Query: \"I want to cancel my order.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(one_shot_prompt, \"Transactional\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_V2i5-Lus7F6",
+        "outputId": "045bab52-7f4d-4f25-df66-8a91f93a40ff"
+      },
+      "execution_count": 22,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example:\n",
+            "Query: \"Great service, I really liked the experience!\"\n",
+            "Category: Feedback\n",
+            "\n",
+            "Now classify the following query:\n",
+            "Query: \"I want to cancel my order.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Transactional\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "few_shot_prompt = \"\"\"\n",
+        "Example 1:\n",
+        "Query: \"What are your working hours?\"\n",
+        "Category: Informational\n",
+        "\n",
+        "Example 2:\n",
+        "Query: \"Please update my delivery address.\"\n",
+        "Category: Transactional\n",
+        "\n",
+        "Example 3:\n",
+        "Query: \"My order arrived damaged.\"\n",
+        "Category: Complaint\n",
+        "\n",
+        "Example 4:\n",
+        "Query: \"Great service, I really liked the experience!\"\n",
+        "Category: Feedback\n",
+        "\n",
+        "Now classify the following query:\n",
+        "Query: \"How can I reset my password?\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(few_shot_prompt, \"Informational\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LmAlJAc5s-sp",
+        "outputId": "c4366693-0523-47d1-fa3f-63aa9d90aef7"
+      },
+      "execution_count": 23,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example 1:\n",
+            "Query: \"What are your working hours?\"\n",
+            "Category: Informational\n",
+            "\n",
+            "Example 2:\n",
+            "Query: \"Please update my delivery address.\"\n",
+            "Category: Transactional\n",
+            "\n",
+            "Example 3:\n",
+            "Query: \"My order arrived damaged.\"\n",
+            "Category: Complaint\n",
+            "\n",
+            "Example 4:\n",
+            "Query: \"Great service, I really liked the experience!\"\n",
+            "Category: Feedback\n",
+            "\n",
+            "Now classify the following query:\n",
+            "Query: \"How can I reset my password?\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Informational\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "observations = \"\"\"\n",
+        "Comparison of Prompting Techniques:\n",
+        "\n",
+        "Zero-shot:\n",
+        "- Fast and simple\n",
+        "- Struggles with ambiguous queries\n",
+        "\n",
+        "One-shot:\n",
+        "- Better intent understanding\n",
+        "- Reduces misclassification\n",
+        "\n",
+        "Few-shot:\n",
+        "- Highest accuracy\n",
+        "- Handles ambiguity well\n",
+        "- Best choice for chatbot deployment\n",
+        "\"\"\"\n",
+        "\n",
+        "print(observations)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "lpQ2Cpi7tFLV",
+        "outputId": "5f43a10e-d43e-4f3f-db38-83acf135e9bf"
+      },
+      "execution_count": 24,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "Comparison of Prompting Techniques:\n",
+            "\n",
+            "Zero-shot:\n",
+            "- Fast and simple\n",
+            "- Struggles with ambiguous queries\n",
+            "\n",
+            "One-shot:\n",
+            "- Better intent understanding\n",
+            "- Reduces misclassification\n",
+            "\n",
+            "Few-shot:\n",
+            "- Highest accuracy\n",
+            "- Handles ambiguity well\n",
+            "- Best choice for chatbot deployment\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#5 scenario\n",
+        "# Sample text messages with emotion labels\n",
+        "emotion_samples = [\n",
+        "    (\"I am feeling really excited and joyful today!\", \"Happy\"),\n",
+        "    (\"I feel very low and nothing seems right.\", \"Sad\"),\n",
+        "    (\"This is so frustrating, I am extremely angry!\", \"Angry\"),\n",
+        "    (\"I am worried about my exams and can’t sleep.\", \"Anxious\"),\n",
+        "    (\"I went to college and attended classes.\", \"Neutral\"),\n",
+        "    (\"I feel nervous and stressed about tomorrow.\", \"Anxious\")\n",
+        "]\n",
+        "\n",
+        "print(\"Emotion Samples:\\n\")\n",
+        "for text, emotion in emotion_samples:\n",
+        "    print(f\"Text: {text}\")\n",
+        "    print(f\"Emotion: {emotion}\\n\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "pX2BqKjstMhM",
+        "outputId": "826a89d7-fdec-48f9-ca59-cbcf1af00c5c"
+      },
+      "execution_count": 25,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Emotion Samples:\n",
+            "\n",
+            "Text: I am feeling really excited and joyful today!\n",
+            "Emotion: Happy\n",
+            "\n",
+            "Text: I feel very low and nothing seems right.\n",
+            "Emotion: Sad\n",
+            "\n",
+            "Text: This is so frustrating, I am extremely angry!\n",
+            "Emotion: Angry\n",
+            "\n",
+            "Text: I am worried about my exams and can’t sleep.\n",
+            "Emotion: Anxious\n",
+            "\n",
+            "Text: I went to college and attended classes.\n",
+            "Emotion: Neutral\n",
+            "\n",
+            "Text: I feel nervous and stressed about tomorrow.\n",
+            "Emotion: Anxious\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def show_prompt(prompt, output):\n",
+        "    print(\"PROMPT:\\n\")\n",
+        "    print(prompt)\n",
+        "    print(\"\\nMODEL OUTPUT:\\n\")\n",
+        "    print(output)\n",
+        "    print(\"-\" * 60)\n"
+      ],
+      "metadata": {
+        "id": "shHhHCdTtqLs"
+      },
+      "execution_count": 26,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "zero_shot_prompt = \"\"\"\n",
+        "Classify the emotion expressed in the following text into one of:\n",
+        "Happy, Sad, Angry, Anxious, Neutral.\n",
+        "\n",
+        "Text: \"I am worried about my exams and can’t sleep.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(zero_shot_prompt, \"Anxious\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "lNfOaza8tsQs",
+        "outputId": "86ad18ec-bf48-4691-dfdd-c8b1bb0b1989"
+      },
+      "execution_count": 27,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Classify the emotion expressed in the following text into one of:\n",
+            "Happy, Sad, Angry, Anxious, Neutral.\n",
+            "\n",
+            "Text: \"I am worried about my exams and can’t sleep.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Anxious\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "one_shot_prompt = \"\"\"\n",
+        "Example:\n",
+        "Text: \"I am feeling really excited and joyful today!\"\n",
+        "Emotion: Happy\n",
+        "\n",
+        "Now classify the emotion of the following text:\n",
+        "Text: \"This is so frustrating, I am extremely angry!\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(one_shot_prompt, \"Angry\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "gI1pwOzTtt3k",
+        "outputId": "ddc52fe8-01d6-4ae0-8cff-92e8a20f344f"
+      },
+      "execution_count": 28,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example:\n",
+            "Text: \"I am feeling really excited and joyful today!\"\n",
+            "Emotion: Happy\n",
+            "\n",
+            "Now classify the emotion of the following text:\n",
+            "Text: \"This is so frustrating, I am extremely angry!\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Angry\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "few_shot_prompt = \"\"\"\n",
+        "Example 1:\n",
+        "Text: \"I am feeling really excited and joyful today!\"\n",
+        "Emotion: Happy\n",
+        "\n",
+        "Example 2:\n",
+        "Text: \"I feel very low and nothing seems right.\"\n",
+        "Emotion: Sad\n",
+        "\n",
+        "Example 3:\n",
+        "Text: \"This is so frustrating, I am extremely angry!\"\n",
+        "Emotion: Angry\n",
+        "\n",
+        "Example 4:\n",
+        "Text: \"I am worried about my exams and can’t sleep.\"\n",
+        "Emotion: Anxious\n",
+        "\n",
+        "Example 5:\n",
+        "Text: \"I went to college and attended classes.\"\n",
+        "Emotion: Neutral\n",
+        "\n",
+        "Now classify the emotion of the following text:\n",
+        "Text: \"I feel nervous and stressed about tomorrow.\"\n",
+        "\"\"\"\n",
+        "\n",
+        "show_prompt(few_shot_prompt, \"Anxious\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "TGKQoH-ytvu9",
+        "outputId": "f6dc5978-4142-4545-c7b1-f2af0c5b8163"
+      },
+      "execution_count": 29,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "PROMPT:\n",
+            "\n",
+            "\n",
+            "Example 1:\n",
+            "Text: \"I am feeling really excited and joyful today!\"\n",
+            "Emotion: Happy\n",
+            "\n",
+            "Example 2:\n",
+            "Text: \"I feel very low and nothing seems right.\"\n",
+            "Emotion: Sad\n",
+            "\n",
+            "Example 3:\n",
+            "Text: \"This is so frustrating, I am extremely angry!\"\n",
+            "Emotion: Angry\n",
+            "\n",
+            "Example 4:\n",
+            "Text: \"I am worried about my exams and can’t sleep.\"\n",
+            "Emotion: Anxious\n",
+            "\n",
+            "Example 5:\n",
+            "Text: \"I went to college and attended classes.\"\n",
+            "Emotion: Neutral\n",
+            "\n",
+            "Now classify the emotion of the following text:\n",
+            "Text: \"I feel nervous and stressed about tomorrow.\"\n",
+            "\n",
+            "\n",
+            "MODEL OUTPUT:\n",
+            "\n",
+            "Anxious\n",
+            "------------------------------------------------------------\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "discussion = \"\"\"\n",
+        "Ambiguity Handling Across Prompting Techniques:\n",
+        "\n",
+        "Zero-shot:\n",
+        "- Struggles with subtle or mixed emotions\n",
+        "- Works best for strong emotional cues\n",
+        "\n",
+        "One-shot:\n",
+        "- Improves understanding with a single reference\n",
+        "- Reduces ambiguity slightly\n",
+        "\n",
+        "Few-shot:\n",
+        "- Best at handling mixed and subtle emotions\n",
+        "- Learns emotion patterns effectively\n",
+        "- Most reliable for mental-health chatbots\n",
+        "\"\"\"\n",
+        "\n",
+        "print(discussion)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "zWBQDCqLtxr7",
+        "outputId": "e872837b-41a7-4939-ca31-0007f4af360e"
+      },
+      "execution_count": 30,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "Ambiguity Handling Across Prompting Techniques:\n",
+            "\n",
+            "Zero-shot:\n",
+            "- Struggles with subtle or mixed emotions\n",
+            "- Works best for strong emotional cues\n",
+            "\n",
+            "One-shot:\n",
+            "- Improves understanding with a single reference\n",
+            "- Reduces ambiguity slightly\n",
+            "\n",
+            "Few-shot:\n",
+            "- Best at handling mixed and subtle emotions\n",
+            "- Learns emotion patterns effectively\n",
+            "- Most reliable for mental-health chatbots\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "VXFDg0oht0tI"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
